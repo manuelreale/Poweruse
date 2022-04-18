@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0>
+    <style> body {padding: 0; margin: 0;} </style>
+     <link rel="stylesheet" href="style.css">
+     <link rel="stylesheet" href="./shadow.css" />
+     <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js'></script>
+    <script src="p5.min.js"></script>
+    <script src="p5.sound.min.js"></script>
+    <script src="sketch.js"></script>
+  </head>
+  <body>
+
+
+
+
+    <div class="shadow-dreamy" id="mydiv1">
+      <p> Consumo attuale: </p>
+      <span id="myspan"> Caricamento </span>
+    </div>
+
+
+  <div class="shadow-dreamy" id="mydiv">
+
+
+
+    <div class="line-chart">
+      <div class="aspect-ratio">
+        <canvas id="chart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="dropdown">
+  <button class="dropbtn">Durata grafico</button>
+  <div class="dropdown-content">
+  <a href="javascript:oneHour()">1h</a>
+  <a href="javascript:sixHours()">6h</a>
+  <a href="javascript:twelveHours()">12h</a>
+  <a href="javascript:twentyFourHours()">24h</a>
+  </div>
+</div>
+  </body>
+
+  <script>
+
+  </script>
+</html>
