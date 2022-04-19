@@ -320,7 +320,7 @@ function twelveHours(){
 }
 
 function twentyFourHours(){
-  res = 4;
+  res = 5;
   duration = 240*3*4*2;
 
   createTable()
