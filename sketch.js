@@ -1,6 +1,4 @@
-
-
-  let toDo=0;
+let toDo=0;
       let table;
 
   function preload() {
@@ -18,22 +16,26 @@ let latestReading;
 
   function setup() {
     table = loadTable('https://docs.google.com/spreadsheets/d/1IJiI5ccjD4XKWVqJwI_YE36Sm71zLC2RQmMRu2od3WA/export?format=csv&id=1IJiI5ccjD4XKWVqJwI_YE36Sm71zLC2RQmMRu2od3WA&gid=0', 'csv', 'header', createTable());
-    oneHour()
+    toDo=0;
+    updateMeter()
+
   }
 
-  //let newM;
+  let v=0;
 
   function draw(){
-    if (millis() - m > 30000){
-      console.log("helo")
-      table = loadTable('https://docs.google.com/spreadsheets/d/1IJiI5ccjD4XKWVqJwI_YE36Sm71zLC2RQmMRu2od3WA/export?format=csv&id=1IJiI5ccjD4XKWVqJwI_YE36Sm71zLC2RQmMRu2od3WA&gid=0', 'csv', 'header', createTable());
-      m = millis()
-    }
 
     if (millis() - n > 1000){
       //console.log('up')
     table = loadTable('https://docs.google.com/spreadsheets/d/1IJiI5ccjD4XKWVqJwI_YE36Sm71zLC2RQmMRu2od3WA/export?format=csv&id=1IJiI5ccjD4XKWVqJwI_YE36Sm71zLC2RQmMRu2od3WA&gid=0', 'csv', 'header', updateMeter());
     n = millis()
+    if(v<60){
+      v++
+    }else{
+      v=0;
+      console.log("helo")
+      table = loadTable('https://docs.google.com/spreadsheets/d/1IJiI5ccjD4XKWVqJwI_YE36Sm71zLC2RQmMRu2od3WA/export?format=csv&id=1IJiI5ccjD4XKWVqJwI_YE36Sm71zLC2RQmMRu2od3WA&gid=0', 'csv', 'header', createTable());
+    }
   }
 
 }
@@ -55,26 +57,27 @@ let oldLength;
 {
   m = millis()
   n = millis()
-  if(duration>table.getRowCount()){
-    duration = table.getRowCount()-1
-  }
 
 
 if(table.getRowCount() != 0){
   if(chartInstance != undefined){ chartInstance.destroy() }
   oldLength = table.getRowCount();
 
-  //count the columns
-  print(table.getRowCount() + ' total rows in table');
-  print(table.getColumnCount() + ' total columns in table');
+  if(duration>table.getRowCount()){
+    duration = table.getRowCount()-1
+  }
 
-  print(table.getColumn('name'));
+  //count the columns
+  //print(table.getRowCount() + ' total rows in table');
+  //print(table.getColumnCount() + ' total columns in table');
+
+  //print(table.getColumn('name'));
   //["Goat", "Leopard", "Zebra"]
 
   //cycle through the table
   for (let r = 0; r < table.getRowCount(); r++)
     for (let c = 0; c < 2; c++) {
-      print(table.getString(r, c));
+      //print(table.getString(r, c));
     }
 
 
@@ -99,7 +102,7 @@ if(table.getRowCount() != 0){
           data: []
         }]
     };
-
+    console.log(table.getRowCount()-duration)
     let averagePM = parseInt(table.getString((table.getRowCount()-duration), 1));
     let valuesPM = 1;
     let stringa;
@@ -132,7 +135,7 @@ if(table.getRowCount() != 0){
 
          averagePM += parseInt(table.getString((table.getRowCount()-duration)+i, 1))
          valuesPM++
-         console.log(averagePM);
+         //console.log(averagePM);
 
        }
      }
@@ -253,7 +256,7 @@ function updateTable()
 
         addData(chartInstance, dataV, round(averagePM/valuesPM))
         removeData(chartInstance)
-        console.log(averagePM/valuesPM);
+        //console.log(averagePM/valuesPM);
 
         unit++;
 
@@ -272,7 +275,7 @@ function updateTable()
 
         averagePM += parseInt(table.getString(i, 1))
         valuesPM++
-        console.log(averagePM, valuesPM);
+        //console.log(averagePM, valuesPM);
 
 
       }
@@ -287,8 +290,10 @@ function updateMeter(){
     latestReading = table.getString(table.getRowCount()-1, 1)
     document.getElementById("myspan").textContent= latestReading + ' Watt' ;
     console.log('updated')
+    setProgress(latestReading/3000*100)
 
     if(toDo == 1){
+      console.log(table.getRowCount());
         createTable();
         toDo=0;
     }
@@ -326,3 +331,26 @@ function twentyFourHours(){
 
   createTable()
 }
+
+var circle = document.querySelector('circle');
+var radius = circle.r.baseVal.value;
+var circumference = radius * 2 * Math.PI;
+
+circle.style.strokeDasharray = `${circumference} ${circumference}`;
+circle.style.strokeDashoffset = `${circumference}`;
+
+function setProgress(percent) {
+  const offset = circumference - percent / 100 * circumference;
+
+  var el = document.getElementsByClassName("progress-ring__circle")[0];
+  el.style.strokeDashoffset = offset;
+}
+
+const input = document.querySelector('input');
+setProgress(input.value);
+
+input.addEventListener('change', function(e) {
+  if (input.value < 101 && input.value > -1) {
+    setProgress(input.value);
+  }
+})
