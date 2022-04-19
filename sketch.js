@@ -1,6 +1,6 @@
 
 
-
+  let toDo=0;
       let table;
 
   function preload() {
@@ -23,17 +23,18 @@ let latestReading;
   //let newM;
 
   function draw(){
-    if (millis() - m > 60000){
+    if (millis() - m > 30000){
       console.log("helo")
-      table = loadTable('https://docs.google.com/spreadsheets/d/1IJiI5ccjD4XKWVqJwI_YE36Sm71zLC2RQmMRu2od3WA/export?format=csv&id=1IJiI5ccjD4XKWVqJwI_YE36Sm71zLC2RQmMRu2od3WA&gid=0', 'csv', 'header', updateTable());
+      table = loadTable('https://docs.google.com/spreadsheets/d/1IJiI5ccjD4XKWVqJwI_YE36Sm71zLC2RQmMRu2od3WA/export?format=csv&id=1IJiI5ccjD4XKWVqJwI_YE36Sm71zLC2RQmMRu2od3WA&gid=0', 'csv', 'header', createTable());
       m = millis()
     }
 
     if (millis() - n > 1000){
       //console.log('up')
-      table = loadTable('https://docs.google.com/spreadsheets/d/1IJiI5ccjD4XKWVqJwI_YE36Sm71zLC2RQmMRu2od3WA/export?format=csv&id=1IJiI5ccjD4XKWVqJwI_YE36Sm71zLC2RQmMRu2od3WA&gid=0', 'csv', 'header', updateMeter());
+    table = loadTable('https://docs.google.com/spreadsheets/d/1IJiI5ccjD4XKWVqJwI_YE36Sm71zLC2RQmMRu2od3WA/export?format=csv&id=1IJiI5ccjD4XKWVqJwI_YE36Sm71zLC2RQmMRu2od3WA&gid=0', 'csv', 'header', updateMeter());
     n = millis()
   }
+
 }
 
   function remove_character(str, char_pos)
@@ -45,7 +46,7 @@ let latestReading;
 let res = 1
 var chart;
 var chartInstance;
-let duration = 2000
+let duration = 240
 let oldLength;
 
 
@@ -197,6 +198,9 @@ if(table.getRowCount() != 0){
         options: options
     });
     oldLength = table.getRowCount()
+  }else{
+    console.log('bruh')
+    toDo = 1;
   }
 
 
@@ -282,35 +286,42 @@ function updateMeter(){
     latestReading = table.getString(table.getRowCount()-1, 1)
     document.getElementById("myspan").textContent= latestReading + ' Watt' ;
     console.log('updated')
+
+    if(toDo == 1){
+        createTable();
+        toDo=0;
+    }
   }
+
+
 
 }
 
 function oneHour(){
   res = 1;
-  duration = 60;
+  duration = 240;
 
 
-  createTable();
+  createTable()
 }
 
-function sixHours(){
-  res = 1;
-  duration = 60*6;
+function threeHours(){
+  res = 2;
+  duration = 240*3;
 
-  createTable();
+  createTable()
 }
 
 function twelveHours(){
-  res = 1;
-  duration = 60*6*2;
+  res = 3;
+  duration = 240*3*4;
 
-  createTable();
+  createTable()
 }
 
 function twentyFourHours(){
-  res = 1;
-  duration = 60*6*2*2;
+  res = 4;
+  duration = 240*3*4*2;
 
-  createTable();
+  createTable()
 }
