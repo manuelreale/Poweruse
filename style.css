@@ -44,9 +44,11 @@ html {
   position:absolute;
   top: 290px;
   font-family: sans-serif;
+  font-weight: bold;
   left: calc(50% - 180px);;
   font-size: 80px;
   padding: 30px;
+  color:#303030;
 }
 
 p{
