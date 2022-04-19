@@ -290,7 +290,7 @@ function updateMeter(){
     latestReading = table.getString(table.getRowCount()-1, 1)
     document.getElementById("myspan").textContent= latestReading + ' Watt' ;
     console.log('updated')
-    setProgress(latestReading/3000*100)
+    setProgress(latestReading/3000*50)
 
     if(toDo == 1){
       console.log(table.getRowCount());
