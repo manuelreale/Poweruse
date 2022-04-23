@@ -51,6 +51,17 @@ html {
   color:#303030;
 }
 
+#myspan2{
+  position:absolute;
+  top: 390px;
+  font-family: sans-serif;
+
+  left: calc(50% - 180px);;
+  font-size: 28px;
+  padding: 30px;
+  color:#808080;
+}
+
 p{
   font-family: sans-serif;
   font-size: 20px;
@@ -226,6 +237,17 @@ input {
     left: calc(50% - 180px);;
     font-size: 80px;
     padding: 30px;
+  }
+
+  #myspan2{
+    position:absolute;
+    top: 390px;
+    font-family: sans-serif;
+
+    left: calc(50% - 180px);;
+    font-size: 28px;
+    padding: 30px;
+    color:#808080;
   }
 
   p{

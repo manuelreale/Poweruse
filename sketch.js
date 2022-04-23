@@ -1,5 +1,8 @@
 let toDo=0;
       let table;
+      let timeAgo =1;
+      let avg24 =0;
+      const prezzoKwh = 0.41;
 
   function preload() {
     //my table is comma separated value "csv"
@@ -15,7 +18,8 @@ let latestReading;
 
 
   function setup() {
-    table = loadTable('https://docs.google.com/spreadsheets/d/1IJiI5ccjD4XKWVqJwI_YE36Sm71zLC2RQmMRu2od3WA/export?format=csv&id=1IJiI5ccjD4XKWVqJwI_YE36Sm71zLC2RQmMRu2od3WA&gid=0', 'csv', 'header', createTable());
+    table = loadTable('https://docs.google.com/spreadsheets/d/1IJiI5ccjD4XKWVqJwI_YE36Sm71zLC2RQmMRu2od3WA/export?format=csv&id=1IJiI5ccjD4XKWVqJwI_YE36Sm71zLC2RQmMRu2od3WA&gid=0', 'csv', 'header', createTable() , twentyFourHoursAverage());
+
     toDo=0;
     updateMeter()
 
@@ -49,7 +53,7 @@ let latestReading;
 let res = 1
 var chart;
 var chartInstance;
-let duration = 240
+let duration = 540
 let oldLength;
 
 
@@ -129,7 +133,7 @@ if(table.getRowCount() != 0){
          dataV = remove_character(dataV, 5)
 
 
-         data.labels[unit/res] = dataV
+         data.labels[unit/res] = moment(dataV, "DD/MM HH.mm")
          data.datasets[0].data[unit/res] = round(averagePM/valuesPM)
 
          unit++;
@@ -165,6 +169,14 @@ if(table.getRowCount() != 0){
       },
       scales: {
         xAxes: [{
+          type: 'time',
+          time: {
+          min: moment().subtract({hours: timeAgo}),
+          max: moment(),
+          parser: 'MM/DD HH.mm',
+          //unit: 'hours',
+          tooltipFormat:'MM/DD HH.mm' // <- HERE
+          },
           gridLines: {
             color: 'rgba(100, 100, 100, 0.05)',
             lineWidth: 1
@@ -259,9 +271,9 @@ function updateTable()
 
       if(i == table.getRowCount()){
 
-        addData(chartInstance, dataV, round(averagePM/valuesPM))
+        addData(chartInstance, moment(dataV, "DD/MM HH.mm"), round(averagePM/valuesPM))
         removeData(chartInstance)
-        //console.log(averagePM/valuesPM);
+        console.log(moment(dataV, "DD/MM HH.mm"));
 
         unit++;
 
@@ -310,31 +322,100 @@ function updateMeter(){
 
 function oneHour(){
   res = 1;
-  duration = 240;
+  duration = 440;
 
-
+  timeAgo =1;
   createTable()
 }
 
 function threeHours(){
   res = 2;
-  duration = 240*3;
-
+  duration = 340*3;
+timeAgo =3;
   createTable()
 }
 
 function twelveHours(){
-  res = 3;
+  res = 5;
   duration = 240*3*4;
-
+timeAgo =12;
   createTable()
 }
 
 function twentyFourHours(){
-  res = 5;
+  res = 8;
   duration = 240*3*4*2;
-
+timeAgo =24;
   createTable()
+}
+
+function twentyFourHoursAverage(){
+  duration = 14400;
+
+  if(duration>table.getRowCount()){
+    duration = table.getRowCount()-1
+  }
+
+  if(table.getRowCount() != 0){
+
+    oldLength = table.getRowCount();
+
+    //count the columns
+    //print(table.getRowCount() + ' total rows in table');
+    //print(table.getColumnCount() + ' total columns in table');
+
+    //print(table.getColumn('name'));
+    //["Goat", "Leopard", "Zebra"]
+
+    //cycle through the table
+    for (let r = 0; r < table.getRowCount(); r++)
+      for (let c = 0; c < 2; c++) {
+        //print(table.getString(r, c));
+      }
+
+      console.log(table.getRowCount()-duration)
+      let averagePM = parseInt(table.getString((table.getRowCount()-duration), 1));
+      let valuesPM = 1;
+      let stringa;
+      let dataV;
+      let unit = 0;
+
+       for(i = 0; unit < 1440*1; i++){
+         //if(table.getString((table.getRowCount()-duration)+i, 0) == )
+         stringa = table.getString((table.getRowCount()-duration)+i, 0)
+
+         if(minute != stringa[stringa.length-4]){
+           minute = stringa[stringa.length-4]
+
+           dataV = table.getString((table.getRowCount()-duration)+i-1, 0).substr(0, stringa.length-3)
+           dataV = remove_character(dataV, 5)
+           dataV = remove_character(dataV, 5)
+           dataV = remove_character(dataV, 5)
+           dataV = remove_character(dataV, 5)
+           dataV = remove_character(dataV, 5)
+
+           avg24+= round(averagePM/valuesPM)
+           //console.log(minute)
+
+           unit++;
+           averagePM = parseInt(table.getString((table.getRowCount()-duration)+i, 1))
+           valuesPM = 1;
+
+         }else {
+
+           averagePM += parseInt(table.getString((table.getRowCount()-duration)+i, 1))
+           valuesPM++
+           //console.log(averagePM);
+
+         }
+       }
+       avg24=Math.trunc((((avg24/(1440*1))/1000)*24*62)*prezzoKwh);
+       document.getElementById("myspan2").textContent= 'Previsione bolletta: ' + avg24 + ' €' ;
+       //console.log('avergaee: ' + avg24)
+
+    }else{
+      console.log('failed hour')
+    }
 }
 
 var circle = document.querySelector('circle');
