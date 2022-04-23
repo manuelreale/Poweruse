@@ -2,7 +2,7 @@ let toDo=0;
       let table;
       let timeAgo =1;
       let avg24 =0;
-      const prezzoKwh = 0.41;
+      const prezzoKwh = 0.354497354;
 
   function preload() {
     //my table is comma separated value "csv"
@@ -380,7 +380,7 @@ function twentyFourHoursAverage(){
       let dataV;
       let unit = 0;
 
-       for(i = 0; unit < 1440*1; i++){
+       for(i = 0; unit < 1440*2; i++){
          //if(table.getString((table.getRowCount()-duration)+i, 0) == )
          stringa = table.getString((table.getRowCount()-duration)+i, 0)
 
@@ -409,7 +409,7 @@ function twentyFourHoursAverage(){
 
          }
        }
-       avg24=Math.trunc((((avg24/(1440*1))/1000)*24*62)*prezzoKwh);
+       avg24=Math.trunc((((avg24/(1440*2))/1000)*24*62)*prezzoKwh);
        document.getElementById("myspan2").textContent= 'Previsione bolletta: ' + avg24 + ' €' ;
        //console.log('avergaee: ' + avg24)
 
