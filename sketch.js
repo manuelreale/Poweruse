@@ -67,6 +67,11 @@ if(table.getRowCount() != 0){
     duration = table.getRowCount()-1
   }
 
+  latestReading = table.getString(table.getRowCount()-1, 1)
+  document.getElementById("myspan").textContent= latestReading + ' Watt' ;
+  console.log('updated')
+  setProgress(latestReading/3000*50)
+
   //count the columns
   //print(table.getRowCount() + ' total rows in table');
   //print(table.getColumnCount() + ' total columns in table');
