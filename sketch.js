@@ -3,6 +3,7 @@ let toDo=0;
       let timeAgo =1;
       let avg24 =0;
       const prezzoKwh = 0.354497354;
+      const avgDay = 6;
 
   function preload() {
     //my table is comma separated value "csv"
@@ -18,9 +19,10 @@ let latestReading;
 
 
   function setup() {
-    table = loadTable('https://docs.google.com/spreadsheets/d/1IJiI5ccjD4XKWVqJwI_YE36Sm71zLC2RQmMRu2od3WA/export?format=csv&id=1IJiI5ccjD4XKWVqJwI_YE36Sm71zLC2RQmMRu2od3WA&gid=0', 'csv', 'header', createTable() , twentyFourHoursAverage());
+    table = loadTable('https://docs.google.com/spreadsheets/d/1IJiI5ccjD4XKWVqJwI_YE36Sm71zLC2RQmMRu2od3WA/export?format=csv&id=1IJiI5ccjD4XKWVqJwI_YE36Sm71zLC2RQmMRu2od3WA&gid=0', 'csv', 'header',createTable(), twentyFourHoursAverage());
 
     toDo=0;
+    duration = 440;
     updateMeter()
 
   }
@@ -330,27 +332,27 @@ function oneHour(){
 
 function threeHours(){
   res = 2;
-  duration = 340*3;
+  duration = 340*4;
 timeAgo =3;
   createTable()
 }
 
 function twelveHours(){
   res = 5;
-  duration = 240*3*4;
+  duration = 240*4*4;
 timeAgo =12;
   createTable()
 }
 
 function twentyFourHours(){
   res = 8;
-  duration = 240*3*4*2;
+  duration = 240*6*4*2;
 timeAgo =24;
   createTable()
 }
 
 function twentyFourHoursAverage(){
-  duration = 14400;
+  duration = 144000;
 
   if(duration>table.getRowCount()){
     duration = table.getRowCount()-1
@@ -373,14 +375,14 @@ function twentyFourHoursAverage(){
         //print(table.getString(r, c));
       }
 
-      console.log(table.getRowCount()-duration)
+      //console.log(table.getRowCount()-duration)
       let averagePM = parseInt(table.getString((table.getRowCount()-duration), 1));
       let valuesPM = 1;
       let stringa;
       let dataV;
       let unit = 0;
 
-       for(i = 0; unit < 1440*2; i++){
+       for(i = 0; unit < 1440*avgDay; i++){
          //if(table.getString((table.getRowCount()-duration)+i, 0) == )
          stringa = table.getString((table.getRowCount()-duration)+i, 0)
 
@@ -409,8 +411,9 @@ function twentyFourHoursAverage(){
 
          }
        }
-       avg24=Math.trunc((((avg24/(1440*2))/1000)*24*62)*prezzoKwh);
+       avg24=Math.trunc((((avg24/(1440*avgDay))/1000)*24*62)*prezzoKwh);
        document.getElementById("myspan2").textContent= 'Previsione bolletta: ' + avg24 + ' €' ;
+       document.getElementById("myspan3").textContent= 'media di ' + avgDay + ' giorni';
        //console.log('avergaee: ' + avg24)
 
     }else{
