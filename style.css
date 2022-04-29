@@ -56,8 +56,8 @@ html {
   top: 390px;
   font-family: sans-serif;
 
-  left: calc(50% - 180px);;
-  font-size: 28px;
+  left: calc(50% - 170px);
+  font-size: 30px;
   padding: 30px;
   color:#808080;
 }
@@ -67,7 +67,7 @@ html {
   top: 430px;
   font-family: sans-serif;
 
-  left: calc(50% - 100px);;
+  left: calc(50% - 110px);
   font-size: 22px;
   padding: 30px;
   color:#d0d0d0;
@@ -255,8 +255,8 @@ input {
     top: 390px;
     font-family: sans-serif;
 
-    left: calc(50% - 180px);;
-    font-size: 28px;
+    left: calc(50% - 170px);
+    font-size: 30px;
     padding: 30px;
     color:#808080;
   }
@@ -266,7 +266,7 @@ input {
     top: 430px;
     font-family: sans-serif;
 
-    left: calc(50% - 100px);;
+    left: calc(50% - 110px);
     font-size: 22px;
     padding: 30px;
     color:#d0d0d0;

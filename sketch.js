@@ -3,7 +3,7 @@ let toDo=0;
       let timeAgo =1;
       let avg24 =0;
       const prezzoKwh = 0.354497354;
-      const avgDay = 6;
+      const avgDay = 9;
 
   function preload() {
     //my table is comma separated value "csv"
@@ -31,11 +31,11 @@ let latestReading;
 
   function draw(){
 
-    if (millis() - n > 1000){
+    if (millis() - n > 2000){
       //console.log('up')
-    table = loadTable('https://docs.google.com/spreadsheets/d/1IJiI5ccjD4XKWVqJwI_YE36Sm71zLC2RQmMRu2od3WA/export?format=csv&id=1IJiI5ccjD4XKWVqJwI_YE36Sm71zLC2RQmMRu2od3WA&gid=0', 'csv', 'header', updateMeter());
     n = millis()
-    if(v<60){
+    if(v<15){
+      table = loadTable('https://docs.google.com/spreadsheets/d/1IJiI5ccjD4XKWVqJwI_YE36Sm71zLC2RQmMRu2od3WA/export?format=csv&id=1IJiI5ccjD4XKWVqJwI_YE36Sm71zLC2RQmMRu2od3WA&gid=0', 'csv', 'header', updateMeter());
       v++
     }else{
       v=0;
@@ -352,7 +352,7 @@ timeAgo =24;
 }
 
 function twentyFourHoursAverage(){
-  duration = 144000;
+  duration = 1440000;
 
   if(duration>table.getRowCount()){
     duration = table.getRowCount()-1
@@ -360,20 +360,7 @@ function twentyFourHoursAverage(){
 
   if(table.getRowCount() != 0){
 
-    oldLength = table.getRowCount();
-
-    //count the columns
-    //print(table.getRowCount() + ' total rows in table');
-    //print(table.getColumnCount() + ' total columns in table');
-
-    //print(table.getColumn('name'));
-    //["Goat", "Leopard", "Zebra"]
-
-    //cycle through the table
-    for (let r = 0; r < table.getRowCount(); r++)
-      for (let c = 0; c < 2; c++) {
-        //print(table.getString(r, c));
-      }
+    //oldLength = table.getRowCount();
 
       //console.log(table.getRowCount()-duration)
       let averagePM = parseInt(table.getString((table.getRowCount()-duration), 1));
@@ -384,12 +371,12 @@ function twentyFourHoursAverage(){
 
        for(i = 0; unit < 1440*avgDay; i++){
          //if(table.getString((table.getRowCount()-duration)+i, 0) == )
-         stringa = table.getString((table.getRowCount()-duration)+i, 0)
+         stringa = table.getString(duration-i, 0)
 
          if(minute != stringa[stringa.length-4]){
            minute = stringa[stringa.length-4]
 
-           dataV = table.getString((table.getRowCount()-duration)+i-1, 0).substr(0, stringa.length-3)
+           dataV = table.getString(duration-i-1, 0).substr(0, stringa.length-3)
            dataV = remove_character(dataV, 5)
            dataV = remove_character(dataV, 5)
            dataV = remove_character(dataV, 5)
@@ -400,20 +387,22 @@ function twentyFourHoursAverage(){
            //console.log(minute)
 
            unit++;
-           averagePM = parseInt(table.getString((table.getRowCount()-duration)+i, 1))
+           averagePM = parseInt(table.getString(duration-i, 1))
            valuesPM = 1;
 
          }else {
 
-           averagePM += parseInt(table.getString((table.getRowCount()-duration)+i, 1))
+           averagePM += parseInt(table.getString(duration-i, 1))
            valuesPM++
            //console.log(averagePM);
 
          }
        }
+
        avg24=Math.trunc((((avg24/(1440*avgDay))/1000)*24*62)*prezzoKwh);
+       console.log("kwh bimestrali :" +Math.trunc(avg24/prezzoKwh))
        document.getElementById("myspan2").textContent= 'Previsione bolletta: ' + avg24 + ' €' ;
-       document.getElementById("myspan3").textContent= 'media di ' + avgDay + ' giorni';
+       document.getElementById("myspan3").textContent= 'media ultimi ' + avgDay + ' giorni';
        //console.log('avergaee: ' + avg24)
 
     }else{
