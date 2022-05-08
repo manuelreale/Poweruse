@@ -3,7 +3,7 @@ let toDo=0;
       let timeAgo =1;
       let avg24 =0;
       const prezzoKwh = 0.354497354;
-      const avgDay = 13;
+      const avgDay = 16;
 
   function preload() {
     //my table is comma separated value "csv"
