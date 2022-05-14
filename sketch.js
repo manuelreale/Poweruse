@@ -3,7 +3,7 @@ let toDo=0;
       let timeAgo =1;
       let avg24 =0;
       const prezzoKwh = 0.354497354;
-      const avgDay = 11;
+      const avgDay = 17;
 
   function preload() {
     //my table is comma separated value "csv"
@@ -423,12 +423,3 @@ function setProgress(percent) {
   var el = document.getElementsByClassName("progress-ring__circle")[0];
   el.style.strokeDashoffset = offset;
 }
-
-const input = document.querySelector('input');
-setProgress(input.value);
-
-input.addEventListener('change', function(e) {
-  if (input.value < 101 && input.value > -1) {
-    setProgress(input.value);
-  }
-})
