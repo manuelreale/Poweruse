@@ -1,5 +1,6 @@
 html, body {
   height: 100%;
+  
 }
 body {
   display: flex;
@@ -8,7 +9,7 @@ body {
   text-align: center;
 
   width: 100%;
-  background: #000000;
+  background: #272727;
 }
 *:before, *:after {
   box-sizing: inherit;
