@@ -1,6 +1,6 @@
 html, body {
   height: 100%;
-  
+
 }
 body {
   display: flex;
@@ -97,6 +97,12 @@ background-color: #272727;
 
 
 }
+
+#p5_loading{
+  background-color: transparent;
+  z-index: -20;
+}
+
 #mydiv{
   position: absolute;
   height: 600px;
