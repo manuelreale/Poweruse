@@ -1,5 +1,6 @@
 let toDo=0;
       let table;
+      let oldTable;
       let timeAgo =1;
       let avg24 =0;
       const prezzoKwh = 0.354497354;
@@ -9,6 +10,7 @@ let toDo=0;
     //my table is comma separated value "csv"
     //and has a header specifying the columns labels
 table = loadTable('https://docs.google.com/spreadsheets/d/1IJiI5ccjD4XKWVqJwI_YE36Sm71zLC2RQmMRu2od3WA/export?format=csv&id=1IJiI5ccjD4XKWVqJwI_YE36Sm71zLC2RQmMRu2od3WA&gid=0', 'csv', 'header');
+oldTable = table;
     //the file can be remote
     //table = loadTable("http://p5js.org/reference/assets/mammals.csv",
     //                  "csv", "header");
@@ -31,10 +33,12 @@ let latestReading;
 
   function draw(){
 
-    if (millis() - n > 2000){
+    if (millis() - n > 5000){
+      console.log(v)
       //console.log('up')
     n = millis()
-    if(v<15){
+    if(v<6){
+      oldTable = table;
       table = loadTable('https://docs.google.com/spreadsheets/d/1IJiI5ccjD4XKWVqJwI_YE36Sm71zLC2RQmMRu2od3WA/export?format=csv&id=1IJiI5ccjD4XKWVqJwI_YE36Sm71zLC2RQmMRu2od3WA&gid=0', 'csv', 'header', updateMeter());
       v++
     }else{
@@ -65,15 +69,15 @@ let oldLength;
   n = millis()
 
 
-if(table.getRowCount() != 0){
+if(oldTable.getRowCount() != 0){
   if(chartInstance != undefined){ chartInstance.destroy() }
-  oldLength = table.getRowCount();
+  oldLength = oldTable.getRowCount();
 
-  if(duration>table.getRowCount()){
-    duration = table.getRowCount()-1
+  if(duration>oldTable.getRowCount()){
+    duration = oldTable.getRowCount()-1
   }
 
-  latestReading = table.getString(table.getRowCount()-1, 1)
+  latestReading = oldTable.getString(oldTable.getRowCount()-1, 1)
   document.getElementById("myspan").textContent= latestReading + ' Watt' ;
   console.log('updated')
   setProgress(latestReading/3000*50)
@@ -86,7 +90,7 @@ if(table.getRowCount() != 0){
   //["Goat", "Leopard", "Zebra"]
 
   //cycle through the table
-  for (let r = 0; r < table.getRowCount(); r++)
+  for (let r = 0; r < oldTable.getRowCount(); r++)
     for (let c = 0; c < 2; c++) {
       //print(table.getString(r, c));
     }
@@ -113,8 +117,8 @@ if(table.getRowCount() != 0){
           data: []
         }]
     };
-    console.log(table.getRowCount()-duration)
-    let averagePM = parseInt(table.getString((table.getRowCount()-duration), 1));
+    console.log(oldTable.getRowCount()-duration)
+    let averagePM = parseInt(oldTable.getString((oldTable.getRowCount()-duration), 1));
     let valuesPM = 1;
     let stringa;
     let dataV;
@@ -122,12 +126,12 @@ if(table.getRowCount() != 0){
 
      for(i = 0; i < duration; i++){
        //if(table.getString((table.getRowCount()-duration)+i, 0) == )
-       stringa = table.getString((table.getRowCount()-duration)+i, 0)
+       stringa = oldTable.getString((oldTable.getRowCount()-duration)+i, 0)
 
        if(minute != stringa[stringa.length-4]){
          minute = stringa[stringa.length-4]
 
-         dataV = table.getString((table.getRowCount()-duration)+i-1, 0).substr(0, stringa.length-3)
+         dataV = oldTable.getString((oldTable.getRowCount()-duration)+i-1, 0).substr(0, stringa.length-3)
          dataV = remove_character(dataV, 5)
          dataV = remove_character(dataV, 5)
          dataV = remove_character(dataV, 5)
@@ -139,12 +143,12 @@ if(table.getRowCount() != 0){
          data.datasets[0].data[unit/res] = round(averagePM/valuesPM)
 
          unit++;
-         averagePM = parseInt(table.getString((table.getRowCount()-duration)+i, 1))
+         averagePM = parseInt(oldTable.getString((oldTable.getRowCount()-duration)+i, 1))
          valuesPM = 1;
 
        }else {
 
-         averagePM += parseInt(table.getString((table.getRowCount()-duration)+i, 1))
+         averagePM += parseInt(oldTable.getString((oldTable.getRowCount()-duration)+i, 1))
          valuesPM++
          //console.log(averagePM);
 
@@ -220,10 +224,11 @@ if(table.getRowCount() != 0){
         data: data,
         options: options
     });
-    oldLength = table.getRowCount()
+    oldLength = oldTable.getRowCount()
   }else{
     console.log('bruh')
-    toDo = 1;
+    //toDo = 1;
+    v=15;
   }
 
 
@@ -325,7 +330,6 @@ function updateMeter(){
 function oneHour(){
   res = 1;
   duration = 440;
-
   timeAgo =1;
   createTable()
 }
@@ -333,21 +337,21 @@ function oneHour(){
 function threeHours(){
   res = 2;
   duration = 340*4;
-timeAgo =3;
+  timeAgo =3;
   createTable()
 }
 
 function twelveHours(){
-  res = 5;
+  res = 6;
   duration = 240*4*4;
-timeAgo =12;
+  timeAgo =12;
   createTable()
 }
 
 function twentyFourHours(){
-  res = 8;
+  res = 10;
   duration = 240*6*4*2;
-timeAgo =24;
+  timeAgo =24;
   createTable()
 }
 
