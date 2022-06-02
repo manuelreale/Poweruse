@@ -71,7 +71,7 @@ var diffMinutes;
   part2 = str.substring(char_pos + 1, str.length);
   return (part1 + part2);
  }
-let res = 1
+let res = 2
 var chart;
 var chartInstance;
 let duration = 540
