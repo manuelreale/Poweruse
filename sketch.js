@@ -4,7 +4,9 @@ let toDo=0;
       let timeAgo =1;
       let avg24 =0;
       const prezzoKwh = 0.354497354;
-      const avgDay = 31;
+      const avgDay = 36;
+      let lastDays=[];
+      let lastDaysLabels=[];
 
   function preload() {
     //my table is comma separated value "csv"
@@ -18,9 +20,22 @@ oldTable = table;
 let m;
 let n;
 let latestReading;
+var diffMinutes;
 
 
   function setup() {
+
+    // Your moment
+    var mmt = moment();
+
+    // Your moment at midnight
+    var mmtMidnight = mmt.clone().startOf('day');
+
+    // Difference in minutes
+    diffMinutes = mmt.diff(mmtMidnight, 'minutes');
+
+
+
     table = loadTable('https://docs.google.com/spreadsheets/d/1IJiI5ccjD4XKWVqJwI_YE36Sm71zLC2RQmMRu2od3WA/export?format=csv&id=1IJiI5ccjD4XKWVqJwI_YE36Sm71zLC2RQmMRu2od3WA&gid=0', 'csv', 'header',createTable(), twentyFourHoursAverage());
 
     toDo=0;
@@ -328,28 +343,28 @@ function updateMeter(){
 }
 
 function oneHour(){
-  res = 1;
+  res = 2;
   duration = 440;
   timeAgo =1;
   createTable()
 }
 
 function threeHours(){
-  res = 2;
+  res = 4;
   duration = 340*4;
   timeAgo =3;
   createTable()
 }
 
 function twelveHours(){
-  res = 6;
+  res = 12;
   duration = 240*4*4;
   timeAgo =12;
   createTable()
 }
 
 function twentyFourHours(){
-  res = 10;
+  res = 20;
   duration = 240*6*4*2;
   timeAgo =24;
   createTable()
@@ -372,6 +387,9 @@ function twentyFourHoursAverage(){
       let stringa;
       let dataV;
       let unit = 0;
+      let daycount = 0;
+      let dayAvg = 0;
+      let daysCount = 0;
 
        for(i = 0; unit < 1440*avgDay; i++){
          //if(table.getString((table.getRowCount()-duration)+i, 0) == )
@@ -388,8 +406,21 @@ function twentyFourHoursAverage(){
            dataV = remove_character(dataV, 5)
 
            avg24+= round(averagePM/valuesPM)
-           //console.log(minute)
 
+           //console.log(minute)
+           if(unit > diffMinutes){
+           dayAvg += round(averagePM/valuesPM)
+           daycount++;}
+
+           if(daycount>=1440){
+
+             daycount = 0;
+             dayAvg=Math.trunc((dayAvg/24)/1000);
+             lastDays[daysCount] = dayAvg;
+             daysCount++;
+             dayAvg=0;
+
+           }
            unit++;
            averagePM = parseInt(table.getString(duration-i, 1))
            valuesPM = 1;
@@ -407,6 +438,8 @@ function twentyFourHoursAverage(){
        console.log("kwh bimestrali :" +Math.trunc(avg24/prezzoKwh))
        document.getElementById("myspan2").textContent= 'Previsione bolletta: ' + avg24 + ' €' ;
        document.getElementById("myspan3").textContent= 'media ultimi ' + avgDay + ' giorni';
+       console.log(lastDays)
+       createBarChart()
        //console.log('avergaee: ' + avg24)
 
     }else{
@@ -426,4 +459,36 @@ function setProgress(percent) {
 
   var el = document.getElementsByClassName("progress-ring__circle")[0];
   el.style.strokeDashoffset = offset;
+}
+
+function createBarChart(){
+
+  for(i=0; i<avgDay-1;i++){
+    lastDaysLabels[i]=moment().subtract({hours: (avgDay-1-i)*24}).format('DD/MM');
+  }
+
+lastDays.reverse();
+  const ctx = document.getElementById('myChart');
+  const myChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+          labels: lastDaysLabels,
+          datasets: [{
+              label: 'Kwh giornalieri',
+              data: lastDays,
+              backgroundColor: 'rgba(127, 130, 255, 0.5)',
+              borderColor: '#7F82FF',
+              borderWidth: 1
+          }]
+      },
+      options: {
+          scales: {
+              y: {
+                  beginAtZero: true
+              }
+          }
+      }
+  });
+
+
 }
