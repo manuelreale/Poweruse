@@ -4,7 +4,7 @@ let toDo=0;
       let timeAgo =1;
       let avg24 =0;
       const prezzoKwh = 0.354497354;
-      const avgDay = 36;
+      const avgDay = 38;
       let lastDays=[];
       let lastDaysLabels=[];
       let lastDaysColor=[];
@@ -423,22 +423,25 @@ function twentyFourHoursAverage(){
            daycount++;
 
            if(curDay != dataV.substring(0,5)){
-             curDay = dataV.substring(0,5);
              daysCount++;
-             if(daycount>1000){
+             if(daycount>900){
                lastDaysColor[daysCount]='rgba(127, 130, 255, 0.5)'
                lastDaysColorBorder[daysCount]='#7F82FF'
-               lastDaysAccuracy[daysCount]=((daycount/1440)*100)+"%"
+               lastDaysAccuracy[daysCount]=""
              }else{
                lastDaysColor[daysCount]='rgba(127, 127, 127, 0.3)'
                lastDaysColorBorder[daysCount]='#5F5F5F'
-               lastDaysAccuracy[daysCount]=((daycount/1440)*100)+"%"
+               lastDaysAccuracy[daysCount]=""
+               //lastDaysAccuracy[daysCount]=Math.trunc((daycount/1440)*100)+"%"
              }
              daycount = 0;
              dayAvg=Math.trunc((dayAvg/24)/1000);
              lastDays[daysCount] = dayAvg;
-             lastDaysLabels[daysCount] = dataV.substring(0,5);
+             if(curDay!=undefined){
+               lastDaysLabels[daysCount] = curDay
+             }
 
+             curDay = dataV.substring(0,5);
 
 
              dayAvg=0;
@@ -491,7 +494,7 @@ lastDaysColor.reverse();
 lastDaysAccuracy.reverse();
 lastDaysColorBorder.reverse();
 lastDaysLabels.reverse();
-lastDaysLabels.shift();
+//lastDaysLabels.shift();
 
   const ctx = document.getElementById('myChart');
   const myChart = new Chart(ctx, {
