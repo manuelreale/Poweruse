@@ -7,6 +7,9 @@ let toDo=0;
       const avgDay = 36;
       let lastDays=[];
       let lastDaysLabels=[];
+      let lastDaysColor=[];
+      let lastDaysColorBorder=[];
+      let lastDaysAccuracy=[];
 
   function preload() {
     //my table is comma separated value "csv"
@@ -390,6 +393,8 @@ function twentyFourHoursAverage(){
       let daycount = 0;
       let dayAvg = 0;
       let daysCount = 0;
+      let curDay;
+
 
        for(i = 0; unit < 1440*avgDay; i++){
          //if(table.getString((table.getRowCount()-duration)+i, 0) == )
@@ -399,25 +404,43 @@ function twentyFourHoursAverage(){
            minute = stringa[stringa.length-4]
 
            dataV = table.getString(duration-i-1, 0).substr(0, stringa.length-3)
+
            dataV = remove_character(dataV, 5)
            dataV = remove_character(dataV, 5)
            dataV = remove_character(dataV, 5)
            dataV = remove_character(dataV, 5)
            dataV = remove_character(dataV, 5)
+           //console.log(dataV.substring(0,5))
+           if(i==0){
+             curDay=dataV.substring(0,5)
+           }
 
            avg24+= round(averagePM/valuesPM)
 
            //console.log(minute)
-           if(unit > diffMinutes){
+
            dayAvg += round(averagePM/valuesPM)
-           daycount++;}
+           daycount++;
 
-           if(daycount>=1440){
-
+           if(curDay != dataV.substring(0,5)){
+             curDay = dataV.substring(0,5);
+             daysCount++;
+             if(daycount>1000){
+               lastDaysColor[daysCount]='rgba(127, 130, 255, 0.5)'
+               lastDaysColorBorder[daysCount]='#7F82FF'
+               lastDaysAccuracy[daysCount]=((daycount/1440)*100)+"%"
+             }else{
+               lastDaysColor[daysCount]='rgba(127, 127, 127, 0.3)'
+               lastDaysColorBorder[daysCount]='#5F5F5F'
+               lastDaysAccuracy[daysCount]=((daycount/1440)*100)+"%"
+             }
              daycount = 0;
              dayAvg=Math.trunc((dayAvg/24)/1000);
              lastDays[daysCount] = dayAvg;
-             daysCount++;
+             lastDaysLabels[daysCount] = dataV.substring(0,5);
+
+
+
              dayAvg=0;
 
            }
@@ -463,11 +486,13 @@ function setProgress(percent) {
 
 function createBarChart(){
 
-  for(i=0; i<avgDay-1;i++){
-    lastDaysLabels[i]=moment().subtract({hours: (avgDay-1-i)*24}).format('DD/MM');
-  }
-
 lastDays.reverse();
+lastDaysColor.reverse();
+lastDaysAccuracy.reverse();
+lastDaysColorBorder.reverse();
+lastDaysLabels.reverse();
+lastDaysLabels.shift();
+
   const ctx = document.getElementById('myChart');
   const myChart = new Chart(ctx, {
       type: 'bar',
@@ -476,8 +501,8 @@ lastDays.reverse();
           datasets: [{
               label: 'Kwh giornalieri',
               data: lastDays,
-              backgroundColor: 'rgba(127, 130, 255, 0.5)',
-              borderColor: '#7F82FF',
+              backgroundColor: lastDaysColor,
+              borderColor: lastDaysColorBorder,
               borderWidth: 1
           }]
       },
