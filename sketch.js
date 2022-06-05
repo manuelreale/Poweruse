@@ -4,7 +4,7 @@ let toDo=0;
       let timeAgo =1;
       let avg24 =0;
       const prezzoKwh = 0.354497354;
-      const avgDay = 38;
+      const avgDay = 39;
       let lastDays=[];
       let lastDaysLabels=[];
       let lastDaysColor=[];
@@ -269,7 +269,7 @@ function removeData(chart) {
 }
 
 
-
+let fasce = [];
 
 function updateTable()
 {
@@ -284,6 +284,7 @@ function updateTable()
    let stringa;
    let dataV;
    let unit = 0;
+
 
    //console.log(table.getString(table.getRowCount()-1, 0))
 
@@ -394,6 +395,11 @@ function twentyFourHoursAverage(){
       let dayAvg = 0;
       let daysCount = 0;
       let curDay;
+      let myMomentObject;
+      let f1=0;
+      let f2=0;
+      let f3=0;
+
 
 
        for(i = 0; unit < 1440*avgDay; i++){
@@ -402,7 +408,8 @@ function twentyFourHoursAverage(){
 
          if(minute != stringa[stringa.length-4]){
            minute = stringa[stringa.length-4]
-
+           myMomentObject = moment(dataV, 'DD/MM hh.mm')
+           //console.log(myMomentObject.day())
            dataV = table.getString(duration-i-1, 0).substr(0, stringa.length-3)
 
            dataV = remove_character(dataV, 5)
@@ -410,12 +417,34 @@ function twentyFourHoursAverage(){
            dataV = remove_character(dataV, 5)
            dataV = remove_character(dataV, 5)
            dataV = remove_character(dataV, 5)
-           //console.log(dataV.substring(0,5))
+           //console.log(dataV.substring(5,8))
            if(i==0){
              curDay=dataV.substring(0,5)
            }
 
            avg24+= round(averagePM/valuesPM)
+
+
+           if(myMomentObject.day()==0){                                                 //if sunday
+             f3++;
+           }else if(myMomentObject.day()==6){                                           //else if saturday
+             if(myMomentObject.hours()>=7 && myMomentObject.hours()<23){
+               f2++;
+             }else{
+               f3++;
+             }
+           }else{                                                                       //else(all the others)
+             if(myMomentObject.hours()==7){
+               f2++;
+             }else if(myMomentObject.hours()>=8 && myMomentObject.hours()<19){
+               f1++;
+             }else if(myMomentObject.hours()>=19 && myMomentObject.hours()<23){
+               f2++;
+             }else{
+               f3++;
+             }
+           }
+
 
            //console.log(minute)
 
@@ -464,8 +493,14 @@ function twentyFourHoursAverage(){
        console.log("kwh bimestrali :" +Math.trunc(avg24/prezzoKwh))
        document.getElementById("myspan2").textContent= 'Previsione bolletta: ' + avg24 + ' €' ;
        document.getElementById("myspan3").textContent= 'media ultimi ' + avgDay + ' giorni';
-       console.log(lastDays)
+       //console.log(lastDays)
+       fasce[0] = (Math.trunc(1000*f1/(f1+f2+f3)))/10;
+       fasce[1] = (Math.trunc(1000*f2/(f1+f2+f3)))/10;
+       fasce[2] = (Math.trunc(1000*f3/(f1+f2+f3)))/10;
+
+       //console.log("f1: " + f1/(f1+f2+f3) + ", f2: " + f2/(f1+f2+f3)+ ", f3: " + f3/(f1+f2+f3))
        createBarChart()
+       createDoughnutChart()
        //console.log('avergaee: ' + avg24)
 
     }else{
@@ -517,6 +552,58 @@ lastDaysLabels.reverse();
           }
       }
   });
+}
 
 
+
+
+
+function createDoughnutChart(){
+  var ctx2 = document.getElementById('graph').getContext('2d');
+var chart = new Chart(ctx2, {
+    // The type of chart we want to create
+    type: 'doughnut',
+    // The data for our dataset
+    data: {
+        labels: ["F1", "F2", "F3"],
+        datasets: [{
+            backgroundColor: ['rgba(127, 130, 255, 0.3)', 'rgba(127, 130, 255, 0.5)', 'rgba(127, 130, 255, 0.8)'],
+            borderColor: '#7F82FF',
+            borderWidth: 1,
+            data: fasce,
+            label:["F1", "F2", "F3"]
+        }]
+    },
+
+    // Configuration options go here
+    options: {
+      legend: {
+            display: true,
+            position: 'right',
+        },
+        tooltips: {
+     callbacks: {
+       label: function (tooltipItem, data) {
+         try {
+           let label = ' ' + data.labels[tooltipItem.index] || '';
+
+           if (label) {
+             label += ': ';
+           }
+
+           const sum = data.datasets[0].data.reduce((accumulator, curValue) => {
+             return accumulator + curValue;
+           });
+           const value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+
+           label += Number((value / sum) * 100).toFixed(2) + '%';
+           return label;
+         } catch (error) {
+           console.log(error);
+         }
+       }
+     }
+   }
+    }
+});
 }

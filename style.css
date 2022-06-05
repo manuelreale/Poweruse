@@ -35,7 +35,18 @@ html {
 }
 
 .bar-chart {
-  top: -90px;
+  top: 0px;
+  position: absolute;
+  height:1000;
+  animation: fadeIn 600ms cubic-bezier(0.57, 0.25, 0.65, 1) 1 forwards;
+  opacity: 0;
+  max-width: 900px;
+  padding:50px;
+  align-items: center;
+}
+
+.doughnut-chart {
+  top: 0px;
   position: absolute;
   height:1000;
   animation: fadeIn 600ms cubic-bezier(0.57, 0.25, 0.65, 1) 1 forwards;
@@ -46,6 +57,10 @@ html {
 }
 
 #mychart{
+  top: 600px;
+}
+
+#graph{
   top: 600px;
 }
 
@@ -134,12 +149,18 @@ z-index: -2;
 
 #mydiv2{
   position: absolute;
-  top: 1270px;
-height: 420px;
+  top: 1180px;
+height: 500px;
 z-index: 1;
-
-
 }
+
+#mydiv3{
+  position: absolute;
+  top: 1710px;
+height: 500px;
+z-index: 1;
+}
+
 .dropbtn {
   background-color: #000050;
   color: white;
@@ -269,7 +290,18 @@ html {
 }
 
 .bar-chart {
-  top: -90px;
+  top: 0px;
+  position: absolute;
+  height:1000;
+  animation: fadeIn 600ms cubic-bezier(0.57, 0.25, 0.65, 1) 1 forwards;
+  opacity: 0;
+  max-width: 900px;
+  padding:50px;
+  align-items: center;
+}
+
+.doughnut-chart {
+  top: 0px;
   position: absolute;
   height:1000;
   animation: fadeIn 600ms cubic-bezier(0.57, 0.25, 0.65, 1) 1 forwards;
@@ -362,11 +394,16 @@ z-index: -2;
 
 #mydiv2{
   position: absolute;
-  top: 1270px;
-height: 420px;
+  top: 1180px;
+height: 500px;
 z-index: 1;
+}
 
-
+#mydiv3{
+  position: absolute;
+  top: 1710px;
+height: 500px;
+z-index: 1;
 }
 
 .dropbtn {
