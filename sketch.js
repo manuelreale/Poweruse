@@ -561,10 +561,11 @@ console.log(lastDays)
             barPercentage: 0.4,
             type: 'time',
             time: {
-            min: moment().subtract({days: 30}),
-            max: moment().subtract({minutes: 1}),
+            min: moment().subtract({days: 15}),
+            max: moment().add({hours: 0}),
+            offset:true,
             parser: 'DD/MM',
-            unit: 'day',
+            //unit: 'hours',
             tooltipFormat:'DD/MM' // <- HERE
             },
             gridLines: {
