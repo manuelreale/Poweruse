@@ -5,6 +5,7 @@ let toDo=0;
       let avg24 =0;
       const prezzoKwh = 0.354497354;
       const avgDay = 39;
+      const barDays = 14;
       let lastDays=[];
       let lastDaysLabels=[];
       let lastDaysColor=[];
@@ -196,7 +197,7 @@ if(oldTable.getRowCount() != 0){
           type: 'time',
           time: {
           min: moment().subtract({hours: timeAgo}),
-          max: moment(),
+          max: moment().subtract({minutes: 1}),
           parser: 'MM/DD HH.mm',
           //unit: 'hours',
           tooltipFormat:'MM/DD HH.mm' // <- HERE
@@ -449,7 +450,9 @@ function twentyFourHoursAverage(){
            //console.log(minute)
 
            dayAvg += round(averagePM/valuesPM)
-           daycount++;
+             daycount++;
+
+
 
            if(curDay != dataV.substring(0,5)){
              daysCount++;
@@ -465,9 +468,10 @@ function twentyFourHoursAverage(){
              }
              daycount = 0;
              dayAvg=Math.trunc((dayAvg/24)/1000);
-             lastDays[daysCount] = dayAvg;
+
              if(curDay!=undefined){
                lastDaysLabels[daysCount] = curDay
+               lastDays[daysCount] = dayAvg;
              }
 
              curDay = dataV.substring(0,5);
@@ -529,7 +533,13 @@ lastDaysColor.reverse();
 lastDaysAccuracy.reverse();
 lastDaysColorBorder.reverse();
 lastDaysLabels.reverse();
+
+lastDays = lastDays.filter(item => item);
+lastDaysLabels = lastDaysLabels.filter(item => item);
 //lastDaysLabels.shift();
+
+console.log(lastDaysLabels)
+console.log(lastDays)
 
   const ctx = document.getElementById('myChart');
   const myChart = new Chart(ctx, {
@@ -545,12 +555,31 @@ lastDaysLabels.reverse();
           }]
       },
       options: {
-          scales: {
-              y: {
-                  beginAtZero: true
-              }
-          }
-      }
+        barThickness: 10,
+        scales: {
+          xAxes: [{
+            barPercentage: 0.4,
+            type: 'time',
+            time: {
+            min: moment().subtract({days: 30}),
+            max: moment().subtract({minutes: 1}),
+            parser: 'DD/MM',
+            unit: 'day',
+            tooltipFormat:'DD/MM' // <- HERE
+            },
+            gridLines: {
+              color: 'rgba(100, 100, 100, 0.05)',
+              lineWidth: 1
+            }
+          }],
+          yAxes: [{
+            gridLines: {
+              color: 'rgba(100, 100, 100, 0.08)',
+              lineWidth: 1
+            }
+          }]
+        }
+      },
   });
 }
 
