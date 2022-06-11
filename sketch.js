@@ -555,14 +555,14 @@ console.log(lastDays)
           }]
       },
       options: {
-        barThickness: 10,
+        barThickness: 20,
         scales: {
           xAxes: [{
-            barPercentage: 0.4,
+            barPercentage: 0.5,
             type: 'time',
             time: {
-            min: moment().subtract({days: 15}),
-            max: moment().add({hours: 0}),
+            min: moment().subtract({days: 16}),
+            max: moment().add({hours: 12}),
             offset:true,
             parser: 'DD/MM',
             //unit: 'hours',
