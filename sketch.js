@@ -4,7 +4,7 @@ let toDo=0;
       let timeAgo =1;
       let avg24 =0;
       const prezzoKwh = 0.354497354;
-      const avgDay = 50;
+      const avgDay = 60;
       const barDays = 14;
       let lastDays=[];
       let lastDaysLabels=[];
@@ -561,7 +561,7 @@ console.log(lastDays)
             barPercentage: 0.5,
             type: 'time',
             time: {
-            min: moment().subtract({days: 16}),
+            min: moment().subtract({days: 16}), //16
             max: moment().add({hours: 12}),
             offset:true,
             parser: 'DD/MM',
