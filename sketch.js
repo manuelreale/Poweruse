@@ -4,7 +4,7 @@ let toDo=0;
       let timeAgo =1;
       let avg24 =0;
       const prezzoKwh = 0.354497354;
-      const avgDay = 60;
+      const avgDay = 20;
       const barDays = 14;
       let lastDays=[];
       let lastDaysLabels=[];
@@ -15,7 +15,7 @@ let toDo=0;
   function preload() {
     //my table is comma separated value "csv"
     //and has a header specifying the columns labels
-table = loadTable('https://docs.google.com/spreadsheets/d/1IJiI5ccjD4XKWVqJwI_YE36Sm71zLC2RQmMRu2od3WA/export?format=csv&id=1IJiI5ccjD4XKWVqJwI_YE36Sm71zLC2RQmMRu2od3WA&gid=0', 'csv', 'header');
+table = loadTable('https://docs.google.com/spreadsheets/d/1IJiI5ccjD4XKWVqJwI_YE36Sm71zLC2RQmMRu2od3WA/export?format=csv', 'csv', 'header');
 oldTable = table;
     //the file can be remote
     //table = loadTable("http://p5js.org/reference/assets/mammals.csv",
@@ -40,7 +40,7 @@ var diffMinutes;
 
 
 
-    table = loadTable('https://docs.google.com/spreadsheets/d/1IJiI5ccjD4XKWVqJwI_YE36Sm71zLC2RQmMRu2od3WA/export?format=csv&id=1IJiI5ccjD4XKWVqJwI_YE36Sm71zLC2RQmMRu2od3WA&gid=0', 'csv', 'header',createTable(), twentyFourHoursAverage());
+    table = loadTable('https://docs.google.com/spreadsheets/d/1IJiI5ccjD4XKWVqJwI_YE36Sm71zLC2RQmMRu2od3WA/export?format=csv', 'csv', 'header',createTable(), twentyFourHoursAverage());
 
     toDo=0;
     duration = 440;
@@ -58,12 +58,12 @@ var diffMinutes;
     n = millis()
     if(v<6){
       oldTable = table;
-      table = loadTable('https://docs.google.com/spreadsheets/d/1IJiI5ccjD4XKWVqJwI_YE36Sm71zLC2RQmMRu2od3WA/export?format=csv&id=1IJiI5ccjD4XKWVqJwI_YE36Sm71zLC2RQmMRu2od3WA&gid=0', 'csv', 'header', updateMeter());
+      table = loadTable('https://docs.google.com/spreadsheets/d/1IJiI5ccjD4XKWVqJwI_YE36Sm71zLC2RQmMRu2od3WA/export?format=csv', 'csv', 'header', updateMeter());
       v++
     }else{
       v=0;
       console.log("helo")
-      table = loadTable('https://docs.google.com/spreadsheets/d/1IJiI5ccjD4XKWVqJwI_YE36Sm71zLC2RQmMRu2od3WA/export?format=csv&id=1IJiI5ccjD4XKWVqJwI_YE36Sm71zLC2RQmMRu2od3WA&gid=0', 'csv', 'header', createTable());
+      table = loadTable('https://docs.google.com/spreadsheets/d/1IJiI5ccjD4XKWVqJwI_YE36Sm71zLC2RQmMRu2od3WA/export?format=csv', 'csv', 'header', createTable());
     }
   }
 
@@ -405,7 +405,9 @@ function twentyFourHoursAverage(){
 
        for(i = 0; unit < 1440*avgDay; i++){
          //if(table.getString((table.getRowCount()-duration)+i, 0) == )
+
          stringa = table.getString(duration-i, 0)
+         console.log(stringa)
 
          if(minute != stringa[stringa.length-4]){
            minute = stringa[stringa.length-4]
